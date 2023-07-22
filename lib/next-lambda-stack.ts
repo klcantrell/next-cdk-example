@@ -74,16 +74,6 @@ export class NextLambdaStack extends Stack {
 
     new CfnOutput(this, "Next bucket", { value: nextBucket.bucketName });
 
-    const nextEdgeFunction = new cloudfront.experimental.EdgeFunction(
-      this,
-      "NextEdgeFunction",
-      {
-        runtime: lambda.Runtime.NODEJS_18_X,
-        handler: "index.handler",
-        code: lambda.Code.fromAsset(path.join(__dirname, "next-edge-function")),
-      }
-    );
-
     const cloudfrontDistribution = new cloudfront.Distribution(
       this,
       "Distribution",
@@ -93,15 +83,9 @@ export class NextLambdaStack extends Stack {
           viewerProtocolPolicy:
             cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
-          edgeLambdas: [
-            {
-              functionVersion: nextEdgeFunction.currentVersion,
-              eventType: cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
-            },
-          ],
         },
         additionalBehaviors: {
-          'item/1.html': {
+          'item/1': {
             origin: new origins.S3Origin(nextBucket),
             viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
           },
@@ -138,6 +122,7 @@ export class NextLambdaStack extends Stack {
       destinationKeyPrefix: "item",
       distribution: cloudfrontDistribution,
       distributionPaths: ["/item/*"],
+      contentType: "text/html",
     });
 
     new s3deploy.BucketDeployment(this, "deploy-next-public-bucket", {

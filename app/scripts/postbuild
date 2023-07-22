@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -exo pipefail
+
+# remove .html extension from all files
+for file in .next/server/pages/item/*; do
+  # Check if the file ends with ".html"
+  if [[ $file == *.html ]]; then
+    # Remove the ".html" extension from the end of the file name
+    mv "$file" "${file%.html}"
+  elif [[ -f $file ]]; then
+    # Remove the file if it's not an HTML file
+    rm "$file"
+  fi
+done
+
+# make main lamda run.sh
+echo -e '#!/bin/bash\n\nnode server.js' > .next/standalone/run.sh && chmod +x .next/standalone/run.sh
+
