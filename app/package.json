@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "OUTPUT_MODE=standalone next build",
+    "build:static": "OUTPUT_MODE=static next build",
     "postbuild": "echo \"#!/bin/bash\n\nnode server.js\n\" > .next/standalone/run.sh && chmod +x .next/standalone/run.sh",
     "start": "next start",
     "lint": "next lint"

@@ -1,8 +1,8 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import Link from 'next/link';
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import Link from "next/link";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
@@ -44,7 +44,9 @@ export default function Home() {
       </div>
 
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-3 lg:text-left">
-        <Link
+        {/* using an anchor tag so we can navigate to a SSG page cached by Cloudfront/S3 */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a
           href="/item/1"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
         >
@@ -55,7 +57,7 @@ export default function Home() {
             </span>
           </h2>
           <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>Go to item 1</p>
-        </Link>
+        </a>
 
         <Link
           href="/item/2"

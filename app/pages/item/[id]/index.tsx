@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: [{ params: { id: "1" } }, { params: { id: "2" } }],
+    paths: [{ params: { id: "1" } }, { params: { id: "2" } }, { params: { id: "3" } }],
     fallback: "blocking",
   };
 };
