@@ -80,11 +80,15 @@ export class NextLambdaStack extends Stack {
       {
         defaultBehavior: {
           origin: new origins.RestApiOrigin(api),
-          viewerProtocolPolicy:
-            cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+          viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
         },
         additionalBehaviors: {
+          "item/*": {
+            origin: new origins.RestApiOrigin(api),
+            viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+            cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+          },
           "_next/static/*": {
             origin: new origins.S3Origin(nextBucket),
             viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
