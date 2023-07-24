@@ -82,13 +82,9 @@ export class NextLambdaStack extends Stack {
           origin: new origins.RestApiOrigin(api),
           viewerProtocolPolicy:
             cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
+          cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
         },
         additionalBehaviors: {
-          'item/1': {
-            origin: new origins.S3Origin(nextBucket),
-            viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
-          },
           "_next/static/*": {
             origin: new origins.S3Origin(nextBucket),
             viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
@@ -114,15 +110,6 @@ export class NextLambdaStack extends Stack {
       destinationKeyPrefix: "_next/static",
       distribution: cloudfrontDistribution,
       distributionPaths: ["/_next/static/*"],
-    });
-
-    new s3deploy.BucketDeployment(this, "deploy-next-ssg-bucket", {
-      sources: [s3deploy.Source.asset("app/.next/server/pages/item")],
-      destinationBucket: nextBucket,
-      destinationKeyPrefix: "item",
-      distribution: cloudfrontDistribution,
-      distributionPaths: ["/item/*"],
-      contentType: "text/html",
     });
 
     new s3deploy.BucketDeployment(this, "deploy-next-public-bucket", {
