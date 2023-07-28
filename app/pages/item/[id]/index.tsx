@@ -1,23 +1,31 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps, InferGetServerSidePropsType } from "next";
 import { useRouter } from "next/router";
 
-export const getServerSideProps: GetServerSideProps = async ({ res, params  }) => {
-  if (params?.id === '1') {
-    res.setHeader("Cache-Control", "public, max-age=30, s-maxage=60, stale-while-revalidate=30");
-  }
-
-  const now = new Date();
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    props: { timeString: `${now.toLocaleDateString()} ${now.toLocaleTimeString()}` },
+    paths: [{ params: { id: "1" } }, { params: { id: "2" } }, { params: { id: "3" } }],
+    fallback: "blocking",
   };
 };
 
-export default function ItemDetailPage({ timeString }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export const getStaticProps: GetStaticProps = async () => {
+  const buildDate = Date.now();
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    dateStyle: "long",
+    timeStyle: "long",
+  }).format(buildDate);
+  return {
+    props: { formattedDate },
+    revalidate: 30,
+  };
+};
+
+export default function ItemDetailPage({ formattedDate }: InferGetServerSidePropsType<typeof getStaticProps>) {
   const router = useRouter();
   return (
     <div className="flex justify-center mt-4">
       <h2>
-        Item {router.query.id} {timeString}
+        Item {router.query.id} {formattedDate}
       </h2>
     </div>
   );

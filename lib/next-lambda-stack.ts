@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { CfnOutput, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
@@ -8,7 +10,6 @@ import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3deploy from "aws-cdk-lib/aws-s3-deployment";
 
-const path = require("node:path");
 
 export class NextLambdaStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
